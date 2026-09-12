@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { writeFile, mkdir, unlink } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
+import { uploadDir } from "@/lib/storage";
 
 async function requireAdmin() {
   if (!(await isAuthenticated())) {
@@ -18,9 +19,9 @@ async function saveImage(file: File): Promise<string> {
   const bytes = Buffer.from(await file.arrayBuffer());
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
   const filename = `${randomUUID()}.${ext || "jpg"}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
-  await writeFile(path.join(uploadDir, filename), bytes);
+  const dir = uploadDir();
+  await mkdir(dir, { recursive: true });
+  await writeFile(path.join(dir, filename), bytes);
   return `/uploads/${filename}`;
 }
 
@@ -89,8 +90,8 @@ export async function deleteProduct(id: string) {
   await prisma.product.delete({ where: { id } });
 
   if (product?.imageUrl?.startsWith("/uploads/")) {
-    const filePath = path.join(process.cwd(), "public", product.imageUrl);
-    await unlink(filePath).catch(() => {});
+    const filename = product.imageUrl.replace("/uploads/", "");
+    await unlink(path.join(uploadDir(), filename)).catch(() => {});
   }
 
   revalidatePath("/");
