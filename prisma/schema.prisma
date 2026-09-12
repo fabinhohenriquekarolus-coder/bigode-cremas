@@ -31,6 +31,11 @@ model ProductImage {
   @@index([productId])
 }
 
+model Settings {
+  id       String  @id @default("singleton")
+  logoUrl  String?
+}
+
 model Variant {
   id        String   @id @default(cuid())
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)

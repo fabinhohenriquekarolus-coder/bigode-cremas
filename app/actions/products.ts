@@ -15,7 +15,7 @@ async function requireAdmin() {
   }
 }
 
-async function saveImage(file: File): Promise<string> {
+export async function saveImage(file: File): Promise<string> {
   const bytes = Buffer.from(await file.arrayBuffer());
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
   const filename = `${randomUUID()}.${ext || "jpg"}`;

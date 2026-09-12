@@ -54,6 +54,9 @@ export default async function StorePage({
             >
               Cadastrar produto
             </Link>
+            <Link href="/admin/logo" className="text-sm text-ink-dim hover:text-ink">
+              Trocar logo
+            </Link>
             <form action={logout}>
               <button className="text-sm text-ink-dim hover:text-ink">Sair</button>
             </form>
