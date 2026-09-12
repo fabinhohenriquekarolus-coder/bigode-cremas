@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { isAuthenticated } from "@/lib/auth";
 import { ProductCard } from "@/components/ProductCard";
 import { CategoryTabs } from "@/components/CategoryTabs";
+import { logout } from "@/app/actions/auth";
 
 export const revalidate = 0;
 
@@ -43,12 +44,17 @@ export default async function StorePage({
           <p className="text-sm font-medium text-ink">
             Modo dono: você pode editar, esgotar e excluir produtos direto aqui.
           </p>
-          <Link
-            href="/admin/novo"
-            className="whitespace-nowrap rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-cloud hover:bg-accent-bright"
-          >
-            Cadastrar produto
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/admin/novo"
+              className="whitespace-nowrap rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-cloud hover:bg-accent-bright"
+            >
+              Cadastrar produto
+            </Link>
+            <form action={logout}>
+              <button className="text-sm text-ink-dim hover:text-ink">Sair</button>
+            </form>
+          </div>
         </div>
       )}
 
