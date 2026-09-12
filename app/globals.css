@@ -69,10 +69,25 @@ body {
   }
 }
 
-.cloud-panel {
+.cloud-panel,
+.comic-cloud {
   background: var(--cloud);
+  border: 3px solid var(--ink);
+  box-shadow: 7px 9px 0 0 var(--ink);
+}
+
+.cloud-panel {
   border-radius: 58% 42% 51% 49% / 46% 54% 46% 54%;
-  box-shadow: 0 20px 60px -20px rgba(23, 50, 74, 0.25);
+}
+
+.comic-cloud-a {
+  border-radius: 32px 48px 40px 56px / 48px 32px 56px 40px;
+}
+.comic-cloud-b {
+  border-radius: 44px 30px 50px 34px / 30px 46px 32px 52px;
+}
+.comic-cloud-c {
+  border-radius: 38px 52px 30px 46px / 50px 34px 48px 30px;
 }
 
 @media (prefers-reduced-motion: reduce) {

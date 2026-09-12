@@ -48,9 +48,13 @@ export function ProductCard({
   const displayName = selectedVariant ? `${product.name} - ${selectedVariant.name}` : product.name;
   const cartId = selectedVariant ? `${product.id}:${selectedVariant.id}` : product.id;
 
+  const variant = ["a", "b", "c"][
+    product.id.split("").reduce((sum, c) => sum + c.charCodeAt(0), 0) % 3
+  ];
+
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-panel-line bg-cloud shadow-[0_12px_30px_-18px_rgba(23,50,74,0.35)]">
-      <div className="relative">
+    <div className={`comic-cloud comic-cloud-${variant} flex flex-col gap-3 p-5`}>
+      <div className="relative overflow-hidden rounded-2xl">
         <ProductCarousel
           images={product.images.map((img) => img.url)}
           alt={product.name}
@@ -63,7 +67,7 @@ export function ProductCard({
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      <div className="flex flex-1 flex-col gap-2">
         <h3 className="font-display text-base font-bold text-ink">{product.name}</h3>
         {product.description && (
           <p className="text-sm leading-relaxed text-ink-dim line-clamp-2">
