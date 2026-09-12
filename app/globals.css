@@ -137,20 +137,32 @@ body {
   background: var(--cloud);
   filter: blur(6px);
   pointer-events: none;
-  animation: cart-puff-out 600ms ease-out both;
+  animation-name: cart-puff-in, cart-puff-float;
+  animation-timing-function: ease-out, ease-in-out;
+  animation-iteration-count: 1, infinite;
+  animation-fill-mode: both, none;
 }
 
-@keyframes cart-puff-out {
+@keyframes cart-puff-in {
   0% {
     opacity: 0;
-    transform: scale(0.3);
-  }
-  35% {
-    opacity: 0.85;
+    transform: scale(0.3) translate(0, 0);
   }
   100% {
-    opacity: 0;
-    transform: scale(1.8);
+    opacity: 0.7;
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+@keyframes cart-puff-float {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.12) translate(5px, -10px);
   }
 }
 

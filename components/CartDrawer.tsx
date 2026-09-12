@@ -56,7 +56,8 @@ function CartDrawer({ onClose }: { onClose: () => void }) {
               left: p.left,
               width: p.size,
               height: p.size,
-              animationDelay: `${p.delay}ms`,
+              animationDuration: `450ms, ${3400 + p.delay * 6}ms`,
+              animationDelay: `${p.delay}ms, ${450 + p.delay}ms`,
             }}
           />
         ))}
