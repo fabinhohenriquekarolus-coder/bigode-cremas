@@ -92,7 +92,12 @@ export function ProductCard({
           <button
             disabled={outOfStock}
             onClick={() => {
-              addItem({ id: cartId, name: displayName, price: product.price });
+              addItem({
+                id: cartId,
+                name: displayName,
+                price: product.price,
+                imageUrl: product.images[0]?.url,
+              });
               setAdded(true);
               setTimeout(() => setAdded(false), 1500);
             }}
