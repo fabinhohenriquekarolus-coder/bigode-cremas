@@ -25,6 +25,19 @@ async function saveImage(file: File): Promise<string> {
   return `/media/${filename}`;
 }
 
+function unlinkImageFile(url: string) {
+  if (url.startsWith("/media/")) {
+    const filename = url.replace("/media/", "");
+    return unlink(path.join(uploadDir(), filename)).catch(() => {});
+  }
+  if (url.startsWith("/uploads/")) {
+    const filename = url.replace("/uploads/", "");
+    const legacyDir = path.join(process.cwd(), "public", "uploads");
+    return unlink(path.join(legacyDir, filename)).catch(() => {});
+  }
+  return Promise.resolve();
+}
+
 export async function createProduct(formData: FormData) {
   await requireAdmin();
 
@@ -32,16 +45,23 @@ export async function createProduct(formData: FormData) {
   const description = String(formData.get("description") || "").trim();
   const price = parseFloat(String(formData.get("price") || "0").replace(",", "."));
   const category = String(formData.get("category") || "Outros");
-  const image = formData.get("image") as File | null;
+  const images = formData.getAll("images").filter((f): f is File => f instanceof File && f.size > 0);
 
-  if (!name || !price || !image || image.size === 0) {
-    throw new Error("Preencha nome, preço e uma foto do produto.");
+  if (!name || !price || images.length === 0) {
+    throw new Error("Preencha nome, preço e ao menos uma foto do produto.");
   }
 
-  const imageUrl = await saveImage(image);
+  const urls = await Promise.all(images.map(saveImage));
 
   await prisma.product.create({
-    data: { name, description, price, imageUrl, category, status: "AVAILABLE" },
+    data: {
+      name,
+      description,
+      price,
+      category,
+      status: "AVAILABLE",
+      images: { create: urls.map((url, order) => ({ url, order })) },
+    },
   });
 
   revalidatePath("/");
@@ -55,24 +75,46 @@ export async function updateProduct(id: string, formData: FormData) {
   const description = String(formData.get("description") || "").trim();
   const price = parseFloat(String(formData.get("price") || "0").replace(",", "."));
   const category = String(formData.get("category") || "Outros");
-  const image = formData.get("image") as File | null;
 
-  const data: {
-    name: string;
-    description: string;
-    price: number;
-    category: string;
-    imageUrl?: string;
-  } = { name, description, price, category };
-
-  if (image && image.size > 0) {
-    data.imageUrl = await saveImage(image);
-  }
-
-  await prisma.product.update({ where: { id }, data });
+  await prisma.product.update({
+    where: { id },
+    data: { name, description, price, category },
+  });
 
   revalidatePath("/");
   redirect("/");
+}
+
+export async function addProductImages(productId: string, formData: FormData) {
+  await requireAdmin();
+
+  const images = formData.getAll("images").filter((f): f is File => f instanceof File && f.size > 0);
+  if (images.length === 0) return;
+
+  const existing = await prisma.productImage.count({ where: { productId } });
+  const urls = await Promise.all(images.map(saveImage));
+
+  await prisma.productImage.createMany({
+    data: urls.map((url, i) => ({ productId, url, order: existing + i })),
+  });
+
+  revalidatePath("/");
+  revalidatePath(`/admin/${productId}/editar`);
+}
+
+export async function deleteProductImage(imageId: string, productId: string) {
+  await requireAdmin();
+
+  const total = await prisma.productImage.count({ where: { productId } });
+  if (total <= 1) {
+    throw new Error("O produto precisa ter ao menos uma foto.");
+  }
+
+  const image = await prisma.productImage.delete({ where: { id: imageId } });
+  await unlinkImageFile(image.url);
+
+  revalidatePath("/");
+  revalidatePath(`/admin/${productId}/editar`);
 }
 
 export async function toggleStatus(id: string) {
@@ -86,17 +128,13 @@ export async function toggleStatus(id: string) {
 
 export async function deleteProduct(id: string) {
   await requireAdmin();
-  const product = await prisma.product.findUnique({ where: { id } });
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: { images: true },
+  });
   await prisma.product.delete({ where: { id } });
 
-  if (product?.imageUrl?.startsWith("/media/")) {
-    const filename = product.imageUrl.replace("/media/", "");
-    await unlink(path.join(uploadDir(), filename)).catch(() => {});
-  } else if (product?.imageUrl?.startsWith("/uploads/")) {
-    const filename = product.imageUrl.replace("/uploads/", "");
-    const legacyDir = path.join(process.cwd(), "public", "uploads");
-    await unlink(path.join(legacyDir, filename)).catch(() => {});
-  }
+  await Promise.all((product?.images ?? []).map((img) => unlinkImageFile(img.url)));
 
   revalidatePath("/");
 }

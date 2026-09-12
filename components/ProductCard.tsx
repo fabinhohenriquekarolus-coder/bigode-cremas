@@ -1,20 +1,21 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useCart } from "./CartProvider";
 import { formatBRL, whatsappLinkForProduct } from "@/lib/whatsapp";
 import { toggleStatus, deleteProduct } from "@/app/actions/products";
+import { ProductCarousel } from "./ProductCarousel";
 
 type Variant = { id: string; name: string; status: string };
+type ProductImage = { id: string; url: string };
 
 type Product = {
   id: string;
   name: string;
   description: string;
   price: number;
-  imageUrl: string;
+  images: ProductImage[];
   status: string;
   variants: Variant[];
 };
@@ -49,13 +50,11 @@ export function ProductCard({
 
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-panel-line bg-cloud shadow-[0_12px_30px_-18px_rgba(23,50,74,0.35)]">
-      <div className="relative aspect-square w-full overflow-hidden bg-panel-line">
-        <Image
-          src={product.imageUrl}
+      <div className="relative">
+        <ProductCarousel
+          images={product.images.map((img) => img.url)}
           alt={product.name}
-          fill
-          className={`object-cover ${outOfStock ? "opacity-40 grayscale" : ""}`}
-          sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
+          outOfStock={outOfStock}
         />
         {outOfStock && (
           <span className="absolute bottom-3 left-3 rounded-full bg-ink/85 px-3 py-1 text-xs font-medium text-cloud">

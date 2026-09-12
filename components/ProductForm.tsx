@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CATEGORIES } from "@/lib/categories";
 import { VariantManager } from "./VariantManager";
+import { ProductImageManager } from "./ProductImageManager";
 
 type Props = {
   action: (formData: FormData) => void;
@@ -11,15 +12,15 @@ type Props = {
     name: string;
     description: string;
     price: number;
-    imageUrl: string;
     category: string;
+    images: { id: string; url: string }[];
     variants: { id: string; name: string; status: string }[];
   };
   submitLabel: string;
 };
 
 export function ProductForm({ action, initial, submitLabel }: Props) {
-  const [preview, setPreview] = useState<string | null>(initial?.imageUrl ?? null);
+  const [previews, setPreviews] = useState<string[]>([]);
 
   return (
     <div className="space-y-6">
@@ -72,27 +73,31 @@ export function ProductForm({ action, initial, submitLabel }: Props) {
           />
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm text-ink-dim">
-            Foto do produto {initial ? "(deixe em branco para manter a atual)" : ""}
-          </label>
-          <input
-            name="image"
-            type="file"
-            accept="image/*"
-            capture="environment"
-            required={!initial}
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) setPreview(URL.createObjectURL(file));
-            }}
-            className="w-full rounded-lg border border-panel-line bg-white px-3 py-2 text-ink file:mr-3 file:rounded-md file:border-0 file:bg-accent file:px-3 file:py-1.5 file:text-cloud file:font-medium"
-          />
-          {preview && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={preview} alt="Pré-visualização" className="h-32 w-32 rounded-lg object-cover" />
-          )}
-        </div>
+        {!initial && (
+          <div className="space-y-2">
+            <label className="text-sm text-ink-dim">Fotos do produto (pode escolher várias)</label>
+            <input
+              name="images"
+              type="file"
+              accept="image/*"
+              multiple
+              required
+              onChange={(e) => {
+                const files = Array.from(e.target.files ?? []);
+                setPreviews(files.map((f) => URL.createObjectURL(f)));
+              }}
+              className="w-full rounded-lg border border-panel-line bg-white px-3 py-2 text-ink file:mr-3 file:rounded-md file:border-0 file:bg-accent file:px-3 file:py-1.5 file:text-cloud file:font-medium"
+            />
+            {previews.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {previews.map((src, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={i} src={src} alt="Pré-visualização" className="h-24 w-24 rounded-lg object-cover" />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <button
           type="submit"
@@ -103,7 +108,10 @@ export function ProductForm({ action, initial, submitLabel }: Props) {
       </form>
 
       {initial && (
-        <VariantManager productId={initial.id} variants={initial.variants} />
+        <>
+          <ProductImageManager productId={initial.id} images={initial.images} />
+          <VariantManager productId={initial.id} variants={initial.variants} />
+        </>
       )}
     </div>
   );

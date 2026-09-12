@@ -84,7 +84,7 @@ async function main() {
         name: p.name,
         description: p.description,
         price: p.price,
-        imageUrl: `/uploads/${filename}`,
+        images: { create: [{ url: `/uploads/${filename}`, order: 0 }] },
         status: "AVAILABLE",
         category: p.category,
         variants: p.variants

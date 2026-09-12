@@ -8,16 +8,27 @@ datasource db {
 }
 
 model Product {
-  id          String    @id @default(cuid())
+  id          String         @id @default(cuid())
   name        String
-  description String    @default("")
+  description String         @default("")
   price       Float
-  imageUrl    String
-  status      String    @default("AVAILABLE") // AVAILABLE | OUT_OF_STOCK
-  category    String    @default("Outros")
+  status      String         @default("AVAILABLE") // AVAILABLE | OUT_OF_STOCK
+  category    String         @default("Outros")
   variants    Variant[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  images      ProductImage[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([productId])
 }
 
 model Variant {

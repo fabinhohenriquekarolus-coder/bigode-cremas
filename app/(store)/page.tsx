@@ -18,7 +18,10 @@ export default async function StorePage({
 
   const allProducts = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },
-    include: { variants: { orderBy: { createdAt: "asc" } } },
+    include: {
+      variants: { orderBy: { createdAt: "asc" } },
+      images: { orderBy: { order: "asc" } },
+    },
   });
 
   const categories = Array.from(new Set(allProducts.map((p) => p.category))).sort();

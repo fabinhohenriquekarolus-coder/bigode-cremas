@@ -11,7 +11,10 @@ export default async function EditProductPage({
   const { id } = await params;
   const product = await prisma.product.findUnique({
     where: { id },
-    include: { variants: { orderBy: { createdAt: "asc" } } },
+    include: {
+      variants: { orderBy: { createdAt: "asc" } },
+      images: { orderBy: { order: "asc" } },
+    },
   });
   if (!product) notFound();
 
@@ -25,8 +28,8 @@ export default async function EditProductPage({
           name: product.name,
           description: product.description,
           price: product.price,
-          imageUrl: product.imageUrl,
           category: product.category,
+          images: product.images,
           variants: product.variants,
         }}
         submitLabel="Salvar alterações"
