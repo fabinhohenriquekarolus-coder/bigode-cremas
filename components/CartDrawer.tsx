@@ -28,12 +28,18 @@ export function CartButton() {
 }
 
 const PUFFS = [
-  { top: "-8%", left: "8%", size: 46, delay: 0 },
-  { top: "-4%", left: "60%", size: 36, delay: 60 },
-  { top: "20%", left: "-6%", size: 40, delay: 30 },
-  { top: "70%", left: "-8%", size: 34, delay: 90 },
-  { top: "85%", left: "70%", size: 44, delay: 45 },
-  { top: "-6%", left: "35%", size: 28, delay: 120 },
+  { top: "-14%", left: "2%", size: 70, delay: 0 },
+  { top: "-18%", left: "30%", size: 56, delay: 40 },
+  { top: "-10%", left: "58%", size: 66, delay: 80 },
+  { top: "-16%", left: "85%", size: 48, delay: 20 },
+  { top: "14%", left: "-14%", size: 60, delay: 60 },
+  { top: "45%", left: "-16%", size: 52, delay: 100 },
+  { top: "72%", left: "-12%", size: 58, delay: 30 },
+  { top: "10%", left: "98%", size: 54, delay: 90 },
+  { top: "50%", left: "100%", size: 50, delay: 50 },
+  { top: "88%", left: "78%", size: 64, delay: 70 },
+  { top: "94%", left: "40%", size: 56, delay: 110 },
+  { top: "90%", left: "10%", size: 48, delay: 15 },
 ];
 
 function CartDrawer({ onClose }: { onClose: () => void }) {
