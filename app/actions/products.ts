@@ -22,7 +22,7 @@ async function saveImage(file: File): Promise<string> {
   const dir = uploadDir();
   await mkdir(dir, { recursive: true });
   await writeFile(path.join(dir, filename), bytes);
-  return `/uploads/${filename}`;
+  return `/media/${filename}`;
 }
 
 export async function createProduct(formData: FormData) {
@@ -89,9 +89,13 @@ export async function deleteProduct(id: string) {
   const product = await prisma.product.findUnique({ where: { id } });
   await prisma.product.delete({ where: { id } });
 
-  if (product?.imageUrl?.startsWith("/uploads/")) {
-    const filename = product.imageUrl.replace("/uploads/", "");
+  if (product?.imageUrl?.startsWith("/media/")) {
+    const filename = product.imageUrl.replace("/media/", "");
     await unlink(path.join(uploadDir(), filename)).catch(() => {});
+  } else if (product?.imageUrl?.startsWith("/uploads/")) {
+    const filename = product.imageUrl.replace("/uploads/", "");
+    const legacyDir = path.join(process.cwd(), "public", "uploads");
+    await unlink(path.join(legacyDir, filename)).catch(() => {});
   }
 
   revalidatePath("/");
