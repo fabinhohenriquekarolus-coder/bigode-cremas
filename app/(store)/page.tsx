@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { isAuthenticated } from "@/lib/auth";
 import { ProductCard } from "@/components/ProductCard";
 import { CategoryTabs } from "@/components/CategoryTabs";
-import { CloudScape } from "@/components/CloudScape";
 import { logout } from "@/app/actions/auth";
 
 export const revalidate = 0;
@@ -67,23 +66,20 @@ export default async function StorePage({
         )}
       </div>
 
-      <div className="relative">
-        <CloudScape />
-        <div className="relative z-10 mx-auto max-w-5xl px-5 pb-14">
-          {categories.length > 0 && (
-            <CategoryTabs categories={categories} active={categoria ?? null} />
-          )}
+      <div className="mx-auto max-w-5xl px-5 pb-14">
+        {categories.length > 0 && (
+          <CategoryTabs categories={categories} active={categoria ?? null} />
+        )}
 
-          {products.length === 0 ? (
-            <p className="mt-16 text-ink-dim">Nenhum produto cadastrado ainda.</p>
-          ) : (
-            <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-10 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} isAdmin={isAdmin} />
-              ))}
-            </div>
-          )}
-        </div>
+        {products.length === 0 ? (
+          <p className="mt-16 text-ink-dim">Nenhum produto cadastrado ainda.</p>
+        ) : (
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-10 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} isAdmin={isAdmin} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

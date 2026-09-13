@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Baloo_2, Inter } from "next/font/google";
+import { CloudScape } from "@/components/CloudScape";
 import "./globals.css";
 
 const baloo = Baloo_2({
@@ -27,7 +28,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${baloo.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col text-ink font-sans">
-        {children}
+        <CloudScape />
+        <div className="relative z-10 flex min-h-full flex-1 flex-col">{children}</div>
       </body>
     </html>
   );
