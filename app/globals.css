@@ -40,7 +40,7 @@ body {
 }
 
 .cloudscape {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
@@ -77,7 +77,7 @@ body {
 }
 
 .cloud-panel {
-  border-radius: 58% 42% 51% 49% / 46% 54% 46% 54%;
+  border-radius: 40px 56px 44px 60px / 56px 40px 60px 44px;
 }
 
 .comic-cloud-a {
