@@ -53,12 +53,12 @@ body {
   height: auto;
 }
 
-.cloud-a { top: 6%; width: 180px; opacity: 0.9; animation: drift-right 70s linear infinite; }
-.cloud-b { top: 16%; width: 130px; opacity: 0.85; animation: drift-right 95s linear infinite; animation-delay: -20s; }
-.cloud-c { top: 32%; width: 240px; opacity: 0.8; animation: drift-right 110s linear infinite; animation-delay: -60s; }
-.cloud-d { top: 48%; width: 110px; opacity: 0.55; animation: drift-right 130s linear infinite; animation-delay: -10s; }
-.cloud-e { top: 65%; width: 200px; opacity: 0.7; animation: drift-right 85s linear infinite; animation-delay: -40s; }
-.cloud-f { top: 78%; width: 120px; opacity: 0.75; animation: drift-right 100s linear infinite; animation-delay: -75s; }
+.cloud-a { top: 6%; width: 180px; opacity: 0.9; animation: drift-right 160s linear infinite; }
+.cloud-b { top: 16%; width: 130px; opacity: 0.85; animation: drift-right 190s linear infinite; animation-delay: -40s; }
+.cloud-c { top: 32%; width: 240px; opacity: 0.8; animation: drift-right 210s linear infinite; animation-delay: -120s; }
+.cloud-d { top: 48%; width: 110px; opacity: 0.55; animation: drift-right 240s linear infinite; animation-delay: -20s; }
+.cloud-e { top: 65%; width: 200px; opacity: 0.7; animation: drift-right 175s linear infinite; animation-delay: -90s; }
+.cloud-f { top: 78%; width: 120px; opacity: 0.75; animation: drift-right 200s linear infinite; animation-delay: -150s; }
 
 @keyframes drift-right {
   from {
