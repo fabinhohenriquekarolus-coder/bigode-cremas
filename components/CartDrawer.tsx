@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useCart } from "./CartProvider";
 import { formatBRL, whatsappLinkForCart } from "@/lib/whatsapp";
+import { CartIcon } from "./CartIcon";
 
 export function CartButton() {
   const { count } = useCart();
@@ -13,8 +14,9 @@ export function CartButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="relative rounded-full border border-panel-line bg-cloud px-4 py-2 text-sm font-medium text-ink transition hover:border-ink-dim"
+        className="relative flex items-center gap-1.5 rounded-full border border-panel-line bg-cloud px-4 py-2 text-sm font-medium text-ink transition hover:border-ink-dim"
       >
+        <CartIcon className="h-4 w-4" />
         Carrinho
         {count > 0 && (
           <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-leaf text-xs font-bold text-cloud">

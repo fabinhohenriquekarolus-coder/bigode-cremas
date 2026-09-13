@@ -6,6 +6,8 @@ import { useCart } from "./CartProvider";
 import { formatBRL, whatsappLinkForProduct } from "@/lib/whatsapp";
 import { toggleStatus, deleteProduct } from "@/app/actions/products";
 import { ProductCarousel } from "./ProductCarousel";
+import { ProductLightbox } from "./ProductLightbox";
+import { CartIcon } from "./CartIcon";
 
 type Variant = { id: string; name: string; status: string };
 type ProductImage = { id: string; url: string };
@@ -29,6 +31,7 @@ export function ProductCard({
 }) {
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [variantId, setVariantId] = useState(
     () =>
       product.variants.find((v) => v.status === "AVAILABLE")?.id ??
@@ -47,6 +50,18 @@ export function ProductCard({
 
   const displayName = selectedVariant ? `${product.name} - ${selectedVariant.name}` : product.name;
   const cartId = selectedVariant ? `${product.id}:${selectedVariant.id}` : product.id;
+  const buyHref = outOfStock ? undefined : whatsappLinkForProduct(displayName, product.price);
+
+  const handleAdd = () => {
+    addItem({
+      id: cartId,
+      name: displayName,
+      price: product.price,
+      imageUrl: product.images[0]?.url,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
 
   const variant = ["a", "b", "c"][
     product.id.split("").reduce((sum, c) => sum + c.charCodeAt(0), 0) % 3
@@ -59,6 +74,7 @@ export function ProductCard({
           images={product.images.map((img) => img.url)}
           alt={product.name}
           outOfStock={outOfStock}
+          onImageClick={() => setLightboxOpen(true)}
         />
         {outOfStock && (
           <span className="absolute bottom-1.5 left-1.5 rounded-full bg-ink/85 px-2 py-0.5 text-[10px] font-medium text-cloud sm:bottom-3 sm:left-3 sm:px-3 sm:py-1 sm:text-xs">
@@ -97,22 +113,14 @@ export function ProductCard({
         <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
           <button
             disabled={outOfStock}
-            onClick={() => {
-              addItem({
-                id: cartId,
-                name: displayName,
-                price: product.price,
-                imageUrl: product.images[0]?.url,
-              });
-              setAdded(true);
-              setTimeout(() => setAdded(false), 1500);
-            }}
-            className="flex-1 rounded-full border border-panel-line py-1 text-[11px] font-medium text-ink transition hover:border-ink-dim disabled:cursor-not-allowed disabled:opacity-30 sm:py-2 sm:text-sm"
+            onClick={handleAdd}
+            className="flex flex-1 items-center justify-center gap-1 rounded-full border border-panel-line py-1 text-[11px] font-medium text-ink transition hover:border-ink-dim disabled:cursor-not-allowed disabled:opacity-30 sm:py-2 sm:text-sm"
           >
+            <CartIcon className="h-3 w-3 sm:h-4 sm:w-4" />
             {added ? "OK" : "Adicionar"}
           </button>
           <a
-            href={outOfStock ? undefined : whatsappLinkForProduct(displayName, product.price)}
+            href={buyHref}
             target="_blank"
             rel="noopener noreferrer"
             aria-disabled={outOfStock}
@@ -147,6 +155,22 @@ export function ProductCard({
           </div>
         )}
       </div>
+
+      {lightboxOpen && (
+        <ProductLightbox
+          name={product.name}
+          images={product.images.map((img) => img.url)}
+          price={product.price}
+          outOfStock={outOfStock}
+          variants={product.variants}
+          variantId={variantId}
+          onVariantChange={setVariantId}
+          onAdd={handleAdd}
+          added={added}
+          buyHref={buyHref}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </div>
   );
 }

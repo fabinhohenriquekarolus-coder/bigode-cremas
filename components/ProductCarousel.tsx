@@ -7,10 +7,12 @@ export function ProductCarousel({
   images,
   alt,
   outOfStock = false,
+  onImageClick,
 }: {
   images: string[];
   alt: string;
   outOfStock?: boolean;
+  onImageClick?: (index: number) => void;
 }) {
   const [index, setIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -20,7 +22,12 @@ export function ProductCarousel({
   };
 
   return (
-    <div className="relative aspect-square w-full select-none overflow-hidden bg-panel-line">
+    <div
+      className={`relative aspect-square w-full select-none overflow-hidden bg-panel-line ${
+        onImageClick ? "cursor-zoom-in" : ""
+      }`}
+      onClick={() => onImageClick?.(index)}
+    >
       <div
         className="flex h-full transition-transform duration-300 ease-out"
         style={{ transform: `translateX(-${index * 100}%)` }}
@@ -54,7 +61,10 @@ export function ProductCarousel({
           {index > 0 && (
             <button
               type="button"
-              onClick={() => go(index - 1)}
+              onClick={(e) => {
+                e.stopPropagation();
+                go(index - 1);
+              }}
               aria-label="Foto anterior"
               className="absolute left-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-ink/60 text-cloud hover:bg-ink/80"
             >
@@ -64,7 +74,10 @@ export function ProductCarousel({
           {index < images.length - 1 && (
             <button
               type="button"
-              onClick={() => go(index + 1)}
+              onClick={(e) => {
+                e.stopPropagation();
+                go(index + 1);
+              }}
               aria-label="Próxima foto"
               className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-ink/60 text-cloud hover:bg-ink/80"
             >
@@ -76,7 +89,10 @@ export function ProductCarousel({
               <button
                 key={i}
                 type="button"
-                onClick={() => go(i)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  go(i);
+                }}
                 aria-label={`Ir para foto ${i + 1}`}
                 className={`h-1.5 rounded-full transition-all ${
                   i === index ? "w-4 bg-cloud" : "w-1.5 bg-cloud/50"
