@@ -9,10 +9,10 @@ export async function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-panel-line bg-cloud/80 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-2">
         <Link href="/" className="flex items-center">
-          <span className="relative h-14 w-14">
-            <Image src={logoUrl} alt={storeName} fill sizes="56px" className="object-contain" priority />
+          <span className="relative h-20 w-20 sm:h-24 sm:w-24">
+            <Image src={logoUrl} alt={storeName} fill sizes="96px" className="object-contain" priority />
           </span>
         </Link>
         <CartButton />
