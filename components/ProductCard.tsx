@@ -110,7 +110,7 @@ export function ProductCard({
           </select>
         )}
 
-        <div className="mt-1 flex gap-1 sm:mt-2 sm:gap-2">
+        <div className="mt-auto flex gap-1 pt-1 sm:gap-2 sm:pt-2">
           <button
             disabled={outOfStock}
             onClick={handleAdd}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { ProductCarousel } from "./ProductCarousel";
 import { CartIcon } from "./CartIcon";
@@ -34,9 +35,17 @@ export function ProductLightbox({
   buyHref?: string;
   onClose: () => void;
 }) {
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, []);
+
   return createPortal(
     <div
-      className="fixed inset-0 z-[200] flex items-start justify-center overflow-y-auto bg-ink/60 p-4 sm:items-center"
+      className="fixed inset-0 z-[200] flex items-start justify-center overflow-y-auto overscroll-contain bg-ink/60 p-4 sm:items-center"
       onClick={onClose}
     >
       <div
@@ -54,7 +63,7 @@ export function ProductLightbox({
           </button>
         </div>
 
-        <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-5">
+        <div className="flex flex-1 flex-col gap-3 overflow-y-auto overscroll-contain p-5">
           <h3 className="font-display text-lg font-bold text-ink">{name}</h3>
           {description && (
             <p className="text-sm leading-relaxed text-ink-dim">{description}</p>
