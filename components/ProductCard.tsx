@@ -159,6 +159,7 @@ export function ProductCard({
       {lightboxOpen && (
         <ProductLightbox
           name={product.name}
+          description={product.description}
           images={product.images.map((img) => img.url)}
           price={product.price}
           outOfStock={outOfStock}

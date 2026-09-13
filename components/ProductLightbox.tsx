@@ -1,5 +1,6 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import { ProductCarousel } from "./ProductCarousel";
 import { CartIcon } from "./CartIcon";
 import { formatBRL } from "@/lib/whatsapp";
@@ -8,6 +9,7 @@ type Variant = { id: string; name: string; status: string };
 
 export function ProductLightbox({
   name,
+  description,
   images,
   price,
   outOfStock,
@@ -20,6 +22,7 @@ export function ProductLightbox({
   onClose,
 }: {
   name: string;
+  description: string;
   images: string[];
   price: number;
   outOfStock: boolean;
@@ -31,16 +34,16 @@ export function ProductLightbox({
   buyHref?: string;
   onClose: () => void;
 }) {
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-ink/60 p-4 sm:items-center"
+      className="fixed inset-0 z-[200] flex items-start justify-center overflow-y-auto bg-ink/60 p-4 sm:items-center"
       onClick={onClose}
     >
       <div
-        className="comic-cloud comic-cloud-a my-6 flex w-full max-w-3xl flex-col overflow-hidden sm:my-0 sm:flex-row"
+        className="comic-cloud comic-cloud-a my-6 flex w-full max-w-3xl flex-col overflow-hidden sm:my-8 sm:max-h-[85vh] sm:flex-row"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative sm:w-3/5">
+        <div className="relative sm:w-1/2">
           <ProductCarousel images={images} alt={name} outOfStock={outOfStock} />
           <button
             onClick={onClose}
@@ -51,8 +54,11 @@ export function ProductLightbox({
           </button>
         </div>
 
-        <div className="flex flex-1 flex-col gap-3 p-5 sm:justify-center">
+        <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-5">
           <h3 className="font-display text-lg font-bold text-ink">{name}</h3>
+          {description && (
+            <p className="text-sm leading-relaxed text-ink-dim">{description}</p>
+          )}
           <p className="font-display text-2xl font-extrabold text-leaf">{formatBRL(price)}</p>
 
           {variants.length > 0 && (
@@ -69,7 +75,7 @@ export function ProductLightbox({
             </select>
           )}
 
-          <div className="mt-2 flex flex-col gap-2">
+          <div className="mt-1 flex flex-col gap-2">
             <button
               disabled={outOfStock}
               onClick={onAdd}
@@ -94,6 +100,7 @@ export function ProductLightbox({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
