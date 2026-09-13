@@ -21,19 +21,19 @@ export async function saveImage(file: File): Promise<string> {
   const filename = `${randomUUID()}.${ext || "jpg"}`;
   const dir = uploadDir();
   await mkdir(dir, { recursive: true });
-  await writeFile(path.join(dir, filename), bytes);
+  await writeFile(path.join(/* turbopackIgnore: true */ dir, filename), bytes);
   return `/media/${filename}`;
 }
 
 function unlinkImageFile(url: string) {
   if (url.startsWith("/media/")) {
     const filename = url.replace("/media/", "");
-    return unlink(path.join(uploadDir(), filename)).catch(() => {});
+    return unlink(path.join(/* turbopackIgnore: true */ uploadDir(), filename)).catch(() => {});
   }
   if (url.startsWith("/uploads/")) {
     const filename = url.replace("/uploads/", "");
     const legacyDir = path.join(process.cwd(), "public", "uploads");
-    return unlink(path.join(legacyDir, filename)).catch(() => {});
+    return unlink(path.join(/* turbopackIgnore: true */ legacyDir, filename)).catch(() => {});
   }
   return Promise.resolve();
 }

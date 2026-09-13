@@ -27,7 +27,7 @@ export async function GET(
   }
 
   try {
-    const bytes = await readFile(path.join(uploadDir(), filename));
+    const bytes = await readFile(path.join(/* turbopackIgnore: true */ uploadDir(), filename));
     return new Response(new Uint8Array(bytes), {
       headers: {
         "Content-Type": contentType,
