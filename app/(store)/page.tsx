@@ -77,7 +77,7 @@ export default async function StorePage({
           {products.length === 0 ? (
             <p className="mt-16 text-ink-dim">Nenhum produto cadastrado ainda.</p>
           ) : (
-            <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-10 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} isAdmin={isAdmin} />
               ))}
