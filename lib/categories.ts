@@ -1,13 +1,18 @@
 export const CATEGORIES = [
-  "Bags organizadoras",
+  "Cuias",
+  "Tesouras",
+  "Mocó",
   "Sedas",
-  "Piteiras",
-  "Moedores",
-  "Pratos de preparo",
-  "Tubos de armazenamento",
-  "Maçaricos",
-  "Recipientes",
-  "Outros",
+  "Piteiras de papel",
+  "Piteiras de vidro",
+  "Pratos",
+  "Slick",
+  "Dichavador",
+  "Case",
+  "Kit completo",
+  "Pote hermético",
+  "Cinzeiro",
+  "Tabaco",
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];
