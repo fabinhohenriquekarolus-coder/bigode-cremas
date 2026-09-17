@@ -14,12 +14,12 @@ export function CartButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="relative flex items-center gap-1.5 rounded-full border border-panel-line bg-cloud px-4 py-2 text-sm font-medium text-ink transition hover:border-ink-dim"
+        aria-label="Abrir carrinho"
+        className="relative flex h-9 w-9 items-center justify-center rounded-full text-ink transition hover:bg-ink/10"
       >
-        <CartIcon className="h-4 w-4" />
-        Carrinho
+        <CartIcon className="h-5 w-5" />
         {count > 0 && (
-          <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-leaf text-xs font-bold text-cloud">
+          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-leaf text-[10px] font-bold text-cloud">
             {count}
           </span>
         )}

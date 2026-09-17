@@ -1,20 +1,19 @@
-import Link from "next/link";
-import Image from "next/image";
+import { prisma } from "@/lib/prisma";
+import { isAuthenticated } from "@/lib/auth";
 import { CartButton } from "./CartDrawer";
-import { getLogoUrl } from "@/app/actions/settings";
+import { Sidebar } from "./Sidebar";
 
 export async function Header() {
-  const storeName = process.env.NEXT_PUBLIC_STORE_NAME || "Loja";
-  const logoUrl = (await getLogoUrl()) ?? "/brand/logo.png";
+  const [products, isAdmin] = await Promise.all([
+    prisma.product.findMany({ select: { category: true } }),
+    isAuthenticated(),
+  ]);
+  const categories = Array.from(new Set(products.map((p) => p.category))).sort();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-panel-line bg-cloud/80 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-2">
-        <Link href="/" className="flex items-center">
-          <span className="relative h-20 w-20 sm:h-24 sm:w-24">
-            <Image src={logoUrl} alt={storeName} fill sizes="96px" className="object-contain" priority />
-          </span>
-        </Link>
+    <header className="sticky top-0 z-40 border-b border-panel-line bg-cloud/90 backdrop-blur">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
+        <Sidebar categories={categories} isAdmin={isAdmin} />
         <CartButton />
       </div>
     </header>

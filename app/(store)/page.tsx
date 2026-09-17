@@ -3,7 +3,6 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { isAuthenticated } from "@/lib/auth";
 import { ProductCard } from "@/components/ProductCard";
-import { CategoryTabs } from "@/components/CategoryTabs";
 import { logout } from "@/app/actions/auth";
 
 export const revalidate = 0;
@@ -25,34 +24,33 @@ export default async function StorePage({
     },
   });
 
-  const categories = Array.from(new Set(allProducts.map((p) => p.category))).sort();
   const products = categoria
     ? allProducts.filter((p) => p.category === categoria)
     : allProducts;
 
   return (
     <div>
-      <div className="relative h-[200px] w-full overflow-hidden sm:h-[300px] lg:h-[360px]">
+      <div className="relative h-[210px] w-full overflow-hidden bg-brand-blue sm:h-[300px] lg:h-[380px]">
         <Image
           src="/brand/cover.jpg"
           alt={storeName}
           fill
           sizes="100vw"
-          className="object-cover"
+          className="object-contain"
           priority
         />
       </div>
 
       <div className="mx-auto max-w-5xl px-5 pt-8 pb-10">
         <h1 className="sr-only">{storeName}</h1>
-        <p className="text-sm font-semibold text-leaf">Headshop premium</p>
-        <p className="mt-2 max-w-md text-base text-ink-dim">
+        <p className="text-sm font-semibold text-cloud">Headshop premium</p>
+        <p className="mt-2 max-w-md text-base text-on-blue-dim">
           Acessórios selecionados pra quem entende da sessão. Adicione ao
           carrinho ou resolva na hora pelo WhatsApp.
         </p>
 
         {isAdmin && (
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-accent/30 bg-accent/10 px-5 py-3">
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-cloud/95 px-5 py-3">
             <p className="text-sm font-medium text-ink">
               Modo dono: você pode editar, esgotar e excluir produtos direto aqui.
             </p>
@@ -75,14 +73,10 @@ export default async function StorePage({
       </div>
 
       <div className="mx-auto max-w-5xl px-5 pb-14">
-        {categories.length > 0 && (
-          <CategoryTabs categories={categories} active={categoria ?? null} />
-        )}
-
         {products.length === 0 ? (
-          <p className="mt-16 text-ink-dim">Nenhum produto cadastrado ainda.</p>
+          <p className="mt-6 text-on-blue-dim">Nenhum produto cadastrado ainda.</p>
         ) : (
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-10 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} isAdmin={isAdmin} />
             ))}
