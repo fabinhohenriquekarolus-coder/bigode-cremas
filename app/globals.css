@@ -76,6 +76,12 @@ body {
   box-shadow: 7px 9px 0 0 var(--ink);
 }
 
+.flat-card {
+  background: var(--cloud);
+  border: 1px solid var(--panel-line);
+  border-radius: 14px;
+}
+
 .cloud-panel {
   border-radius: 40px 56px 44px 60px / 56px 40px 60px 44px;
 }

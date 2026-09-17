@@ -63,12 +63,8 @@ export function ProductCard({
     setTimeout(() => setAdded(false), 1500);
   };
 
-  const variant = ["a", "b", "c"][
-    product.id.split("").reduce((sum, c) => sum + c.charCodeAt(0), 0) % 3
-  ];
-
   return (
-    <div className={`comic-cloud comic-cloud-${variant} flex flex-col gap-1.5 p-2.5 sm:gap-3 sm:p-4`}>
+    <div className="flat-card flex flex-col gap-1.5 p-2.5 sm:gap-3 sm:p-4">
       <div className="relative overflow-hidden rounded-lg sm:rounded-xl">
         <ProductCarousel
           images={product.images.map((img) => img.url)}

@@ -5,7 +5,6 @@ import { isAuthenticated } from "@/lib/auth";
 import { ProductCard } from "@/components/ProductCard";
 import { CategoryTabs } from "@/components/CategoryTabs";
 import { logout } from "@/app/actions/auth";
-import { getLogoUrl } from "@/app/actions/settings";
 
 export const revalidate = 0;
 
@@ -17,7 +16,6 @@ export default async function StorePage({
   const { categoria } = await searchParams;
   const isAdmin = await isAuthenticated();
   const storeName = process.env.NEXT_PUBLIC_STORE_NAME || "Loja";
-  const logoUrl = (await getLogoUrl()) ?? "/brand/logo.png";
 
   const allProducts = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },
@@ -34,20 +32,24 @@ export default async function StorePage({
 
   return (
     <div>
-      <div className="mx-auto max-w-5xl px-5 pt-10 pb-10">
+      <div className="relative h-[200px] w-full overflow-hidden sm:h-[300px] lg:h-[360px]">
+        <Image
+          src="/brand/cover.jpg"
+          alt={storeName}
+          fill
+          sizes="100vw"
+          className="object-cover"
+          priority
+        />
+      </div>
+
+      <div className="mx-auto max-w-5xl px-5 pt-8 pb-10">
         <h1 className="sr-only">{storeName}</h1>
-        <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-center sm:gap-8 sm:text-left">
-          <div className="relative h-40 w-40 shrink-0 sm:h-52 sm:w-52">
-            <Image src={logoUrl} alt={storeName} fill sizes="208px" className="object-contain" priority />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-leaf">Headshop premium</p>
-            <p className="mt-2 max-w-md text-base text-ink-dim">
-              Acessórios selecionados pra quem entende da sessão. Adicione ao
-              carrinho ou resolva na hora pelo WhatsApp.
-            </p>
-          </div>
-        </div>
+        <p className="text-sm font-semibold text-leaf">Headshop premium</p>
+        <p className="mt-2 max-w-md text-base text-ink-dim">
+          Acessórios selecionados pra quem entende da sessão. Adicione ao
+          carrinho ou resolva na hora pelo WhatsApp.
+        </p>
 
         {isAdmin && (
           <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-accent/30 bg-accent/10 px-5 py-3">
